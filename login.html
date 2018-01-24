@@ -1,0 +1,414 @@
+<?php
+session_start();
+//connect to database
+$db=mysqli_connect("localhost","root","","train_reservation");
+
+if(isset($_POST['login_btn']))
+{
+    $email=mysqli_real_escape_string($db,$_POST['email']);
+    $password=mysqli_real_escape_string($db,$_POST['password']);
+    $password=md5($password); //Remember we hashed password before storing last time
+    $name = "SELECT name FROM users WHERE email='$email' AND password='$password'";
+	
+    $sql="SELECT * FROM users WHERE email='$email' AND password='$password'";
+    $result=mysqli_query($db,$sql);
+    $name = mysqli_query($db,$name);
+    $row = mysqli_fetch_assoc($name);
+    $post= $row['name'];
+    if(mysqli_num_rows($result)==1)
+    {
+		$_SESSION['login'] = 1;
+	    $_SESSION['name']=$post;
+        $_SESSION['message']="You are now Logged In";
+		$_SESSION['header'] = "Welcome $post";
+        $_SESSION['email']=$email;
+        header("location:homepage.php");
+    }
+   else
+   {
+                $_SESSION['message']="Incorrect Email or Password";
+    }
+}
+?>
+<style>
+
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,dl,dt,dd,ol,nav ul,nav li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;}
+article, aside, details, figcaption, figure,footer, header, hgroup, menu, nav, section {display: block;}
+ol,ul{list-style:none;margin:0px;padding:0px;}
+blockquote,q{quotes:none;}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none;}
+table{border-collapse:collapse;border-spacing:0;}
+a{text-decoration:none;}
+.txt-rt{text-align:right;}/* text align right */
+.txt-lt{text-align:left;}/* text align left */
+.txt-center{text-align:center;}/* text align center */
+.float-rt{float:right;}/* float right */
+.float-lt{float:left;}/* float left */
+.clear{clear:both;}/* clear float */
+.pos-relative{position:relative;}/* Position Relative */
+.pos-absolute{position:absolute;}/* Position Absolute */
+.vertical-base{	vertical-align:baseline;}/* vertical align baseline */
+.vertical-top{	vertical-align:top;}/* vertical align top */
+nav.vertical ul li{	display:block;}/* vertical menu */
+nav.horizontal ul li{	display: inline-block;}/* horizontal menu */
+img{max-width:100%;}
+/*end reset*/
+
+body {
+    background:url('../img/login.jpg') no-repeat 62% 90%;
+    background-size: cover;
+    text-align: center;
+	font-family: 'Open Sans', sans-serif;
+}
+
+/*--header--*/
+
+.header-w30{
+    margin: 20px;
+}
+.header-w30 h1{
+	font-size:3em;
+    color:white;
+    letter-spacing: 6px;
+    font-weight: 500;
+    font-family: 'Open Sans', sans-serif;
+    text-transform: uppercase;
+}
+
+.header-w30 h3{
+	color:white;
+	letter-spacing: 4px;	
+}
+/*--//header--*/
+
+/*--main--*/
+
+.main-content-agile {
+    margin: 105px 0px;
+}
+.sub-main-w3 input[type="text"],.sub-main-w3 input[type="password"], .sub-main-w3 input[type="email"]{
+    outline: none;
+    font-size: 1em;
+    padding: 15px 8px 15px 8px;
+    border: none;
+    margin: 0 0 15px 0;
+    font-family: 'Open Sans', sans-serif;
+    background: none;
+    border-bottom: 2px solid #eee;
+    width: 20%;
+    color: white;
+    font-weight: 600;
+}
+.button-w3 input[type="submit"] {
+   display: inline-block;
+  width: 200px;
+  padding: 8px;
+  color: #fff;
+  background-color: transparent;
+  border: 2px solid #8B0000;
+   border-radius: 5px;
+  text-align: center;
+  outline: none;
+  text-decoration: none;
+  transition: color 0.3s ease-out,
+              background-color 0.3s ease-out,
+              border-color 0.3s ease-out;
+		
+}
+
+.button-w3 input[type="submit"]:hover,
+.button-w3 input[type="submit"]:active {
+background-color: #8B0000;
+  border-color: #8B0000;
+  color: #fff;
+  transition: color 0.3s ease-in,
+              background-color 0.3s ease-in,
+              border-color 0.3s ease-in;
+			  
+}
+.button-w4 {
+   display: inline-block;
+  width: 200px;
+  padding: 8px;
+  color: #fff;
+  background-color: transparent;
+  border: 2px solid #ff4500;
+   border-radius: 5px;
+  text-align: center;
+  outline: none;
+  text-decoration: none;
+  transition: color 0.3s ease-out,
+              background-color 0.3s ease-out,
+              border-color 0.3s ease-out;
+		
+}
+.button-w4:hover,
+.button-w4:active{
+background-color: #ff4500;
+  border-color: #ff4500;
+  color: #fff;
+  transition: color 0.3s ease-in,
+              background-color 0.3s ease-in,
+              border-color 0.3s ease-in;
+			  
+}
+
+/*--//main--*/
+
+/*--placeholder-color--*/
+
+::-webkit-input-placeholder{
+	color:rgba(255, 255, 255, 0.65);
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color: rgba(255, 255, 255, 0.65); 
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color: rgba(255, 255, 255, 0.65);  
+}
+
+:-ms-input-placeholder {  
+   color: rgba(255, 255, 255, 0.65);  
+}
+/*--//placeholder-color--*/
+
+/*--responsive--*/
+
+@media(max-width:1440px){
+	
+}
+@media (max-width:1366px){
+	.sub-main-w3 input[type="password"],.sub-main-w3 input[type="text"],.sub-main-w3 input[type="email"]{
+		width:22%;
+	}
+}	
+@media (max-width:1280px){
+	.sub-main-w3 input[type="password"],.sub-main-w3 input[type="text"],.sub-main-w3 input[type="email"] {
+		width:23%;
+	}
+}
+@media (max-width:1024px){
+	.sub-main-w3 input[type="password"],.sub-main-w3 input[type="text"],.sub-main-w3 input[type="email"]{
+		width:28%;
+	}
+}
+@media (max-width:991px){
+	.sub-main-w3 input[type="password"],.sub-main-w3 input[type="text"],.sub-main-w3 input[type="email"] {
+		width:29%;
+	}
+}
+@media(max-width:800px){
+	.header-w3l h1 {
+		font-size: 39px;
+	}
+	.sub-main-w3 input[type="password"],.sub-main-w3 input[type="text"],.sub-main-w3 input[type="email"] {
+		width:34%;
+	}
+}
+@media(max-width:768px){
+	.header-w3l h1 {
+		font-size: 36px;
+	}
+	.main-content-agile {
+		margin: 226px 0px;
+	}
+	.sub-main-w3 input[type="password"],.sub-main-w3 input[type="text"],.sub-main-w3 input[type="email"] {
+		width:36%;
+	}
+}
+@media(max-width:736px){
+	.header-w3l h1 {
+		font-size: 34px;
+	}
+	.sub-main-w3 input[type="password"],.sub-main-w3 input[type="text"],.sub-main-w3 input[type="email"] {
+		width:40%;
+		font-size: 0.9em;
+	}
+	.main-content-agile {
+		margin: 181px 0px;
+	}
+}
+@media(max-width:667px){
+	.header-w3l h1 {
+		font-size: 28px;
+	}
+	.main-content-agile {
+		margin: 124px 0px;
+	}
+	.header-w3l{
+		margin: 38px;
+	}
+}
+@media(max-width:640px){
+	.header-w3l h1 {
+		font-size: 26px;
+	}
+	.sub-main-w3 input[type="password"],.sub-main-w3 input[type="text"],.sub-main-w3 input[type="email"] {
+		width:42%;
+		font-size: 0.9em;
+	}
+}
+@media(max-width:600px){
+	.header-w3l h1 {
+		font-size: 27px;
+	}
+	.sub-main-w3 input[type="password"],.sub-main-w3 input[type="text"],.sub-main-w3 input[type="email"] {
+		width:46%;
+		font-size: 0.9em;
+	}
+	.header-w3l {
+		margin: 52px;
+	}
+}
+@media(max-width:568px){
+	.header-w3l h1 {
+		font-size: 30px;
+	}
+	.sub-main-w3 input[type="password"],.sub-main-w3 input[type="text"],.sub-main-w3 input[type="text"] {
+		width:48%;
+		font-size: 0.9em;
+	}
+	.header-w3l {
+		margin: 24px 0px;
+	}
+}
+@media(max-width:480px){
+	.header-w3l{
+		margin:48px 0px;
+	}
+	.header-w3l h1 {
+		font-size: 30px;
+		letter-spacing: 3px;
+		font-weight: 500;
+		line-height: 1em;
+	}
+	.sub-main-w3 input[type="password"],.sub-main-w3 input[type="text"],.sub-main-w3 input[type="email"] {
+		width:56%;
+		font-size: 0.9em;
+	}
+	.footer p{
+		line-height: 28px;
+	}
+}
+@media(max-width:414px){
+	.header-w3l h1 {
+		font-size: 30px;
+		line-height: 1em;
+		letter-spacing: 1px;
+	}
+	.main-content-agile {
+		margin: 84px 0px;
+	}
+	.sub-main-w3 input[type="password"],.sub-main-w3 input[type="text"],.sub-main-w3 input[type="email"] {
+		width:60%;
+		font-size: 0.9em;
+	}
+	.footer p{
+		line-height: 28px;
+	}
+	.footer {
+		padding: 4.3em 0;
+	}
+
+}
+@media(max-width:384px){
+	.header-w3l h1 {
+		font-size: 24px;
+	}
+	.sub-main-w3 input[type="password"],.sub-main-w3 input[type="text"],.sub-main-w3 input[type="email"] {
+		width:64%;
+		font-size: 0.9em;
+	}
+	.footer p{
+		line-height: 28px;
+	}
+}
+@media(max-width:375px){
+	.footer p{
+		line-height: 28px;
+	}
+	.sub-main-w3 input[type="password"],.sub-main-w3 input[type="text"],.sub-main-w3 input[type="email"] {
+		width:68%;
+		font-size: 0.9em;
+	}
+	.footer {
+		padding: 3em 0 1em;
+	}
+}
+@media(max-width:320px){
+	.header-w3l {
+		margin: 31px 0px;
+	}
+	.header-w3l h1 {
+		font-size: 18px;
+		font-weight: 500;
+		letter-spacing: 3px;
+		line-height: 1.7em;
+	}
+	.sub-main-w3 input[type="password"],.sub-main-w3 input[type="text"] {
+		width:68%;
+		font-size: 0.9em;
+	}
+	.footer p{
+		line-height: 28px;
+		font-size: 0.9em;
+	}
+	.main-content-agile {
+		margin: 55px 0px;
+	}
+	 .footer {
+		padding: 0em 0 1.1em;
+	}
+}
+/*--//responsive--*/
+</style>
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Transparent Login Form Responsive Widget,Login form widgets, Sign up Web forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><!--web-fonts-->
+<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'/>
+<!--web-fonts-->
+</head>
+
+<body>
+<!--header-->
+	<div class="header-w30">
+	<br><br><br><br><br><br><br>
+	<b>	<h1> L O G I N </h1> <b>
+	</div>
+	<br>
+<!--//header-->
+
+<h2 style = "color:#fff">
+<!--main-->
+<div class="main-content-agile">
+	<div class="sub-main-w3">	
+		<form action="login.php" method="post">
+			<input placeholder="E-mail" name="email" class="user" type="email" required=""><br>
+			<input  placeholder="Password" name="password" class="pass" type="password" required=""><br>
+<!--<a class="ghost-button" name="login_btn" href="homepage.php">Log In</a>-->
+	</div>
+			<h4>
+			<div class="button-w3">
+				<input value = "L O G I N" type="submit" name="login_btn" class="Log In">
+			</div>
+			</h4>
+			
+		</form>
+			<h5>
+			<a class="button-w4" href="registration.php">R E G I S T E R</a>
+			</h5>
+</div>
+<!--//main-->
+
+
+</body>
+</html>
